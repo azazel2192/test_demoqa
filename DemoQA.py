@@ -1,6 +1,7 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 class locators:
     element_selector = (By.CSS_SELECTOR, '.top-card')
@@ -20,12 +21,14 @@ class DataQA:
         self.base_url = "https://demoqa.com"
 
     def find_elements(self, locator, time=10):
-        return WebDriverWait(self.driver,time).until(EC.presence_of_all_elements_located(locator))
+        try:
+            return WebDriverWait(self.driver,time).until(EC.presence_of_all_elements_located(locator))
+        except NoSuchElementException as e:
+            raise Exception(e)
 
     def open_demoqa(self):
         self.driver.get(self.base_url)
     def click_element_button(self):
-        #print(self.find_elements((By.CSS_SELECTOR(), '.top-card'))[0])
         self.find_elements(locators.element_selector)[0].click()
 
     def click_checkbox_button(self):
